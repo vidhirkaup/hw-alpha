@@ -10,13 +10,13 @@ import java.time.format.DateTimeFormatter;
 public class ActiveMQRouter extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("file:files/json")
+        from("file:files/amq/json")
                 .log("${body}")
                 .to("activemq:json-1")
                 .to("activemq:json-2")
                 .to("activemq:json-3");
 
-        from("file:files/xml")
+        from("file:files/amq/xml")
                 .log("${body}")
                 .to("activemq:xml-1")
                 .to("activemq:xml-2")
