@@ -1,28 +1,60 @@
 package com.vlabs.hw.alpha.routes;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.RouteBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Component
 public class TimerRouter extends RouteBuilder {
+
+    @Autowired
+    private DummyTimer dummyTimer;
+
+    @Autowired
+    private DummyLogger dummyLogger;
+
     @Override
     public void configure() throws Exception {
         try {
-            from("timer:hw-timer-1")  // queue or listener
-                    .to("log:hw-timer-log"); // database - Exchange[ExchangePattern: InOnly, BodyType: null, Body: [Body is null]]
-
-            from("timer:hw-timer-2")
-                    .transform().constant("a constant message")
-                    .to("log:hw-timer-log");            // Exchange[ExchangePattern: InOnly, BodyType: String, Body: a constant message]
-
             from("timer:hw-timer-3")
-                    .transform().constant(String.format("current time is {%s}", LocalDateTime.now()))
-                    .to("log:hw-timer-log");            // Exchange[ExchangePattern: InOnly, BodyType: String, Body: current time is {2021-04-11T07:45:21.720}]
+                    .log("> raw msg: ${body}")
+
+                    .transform().constant("modified the body here")
+                    .log("> transform step - constant: ${body}")
+
+                    .bean(dummyTimer, "getFormattedCurrentTime")
+                    .log("> transform step - in bean: ${body}")
+
+                    .bean(dummyLogger)
+                    .log("> processing step - in bean: ${body}")
+
+                    .to("log:hw-timer-log");
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception();
         }
+    }
+}
+
+@Component
+class DummyTimer {
+    public String getCurrentTime() {
+        return String.format("current time is [%s]", LocalDateTime.now());
+    }
+
+    public String getFormattedCurrentTime() {
+        return String.format("current time is [%tR]", LocalDateTime.now());
+    }
+}
+
+@Slf4j
+@Component
+class DummyLogger {
+    public void simplyLog(String msg){
+      log.info("+ simple processor: {}", msg.toUpperCase());
     }
 }
