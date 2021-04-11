@@ -12,9 +12,14 @@ public class ActiveMQRouter extends RouteBuilder {
     public void configure() throws Exception {
         from("file:files/json")
                 .log("${body}")
-                .to("activemq:test-queue-1")
-                .to("activemq:test-queue-2")
-                .to("activemq:test-queue-3");
+                .to("activemq:json-1")
+                .to("activemq:json-2")
+                .to("activemq:json-3");
 
+        from("file:files/xml")
+                .log("${body}")
+                .to("activemq:xml-1")
+                .to("activemq:xml-2")
+                .to("activemq:xml-3");
     }
 }
