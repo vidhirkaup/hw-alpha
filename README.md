@@ -18,12 +18,16 @@ The following guides illustrate how to use some features concretely:
 * [Using Apache Camel with Spring Boot](https://camel.apache.org/camel-spring-boot/latest/spring-boot.html)
 
 
-### VK Comments
-* For AMQ - user
+### Local Setup
+* For AMQ
+  * Docker container: docker run -p 61616:61616 -p 8161:8161 rmohr/activemq
+    * console - http://localhost:8161/admin/queues.jsp
   * Test using [cp 1000.xml ../../files/amq/xml/; cp 1000.json ../../files/amq/json/]
   
 * For Kafka
-  * {java.net.UnknownHostException: 02a85aa7****}
+  * Docker container: ~\source\java\hw-alpha\help> docker-compose up
+    * This needs the docker-compose.yaml file
+  * For this issue {java.net.UnknownHostException: 02a85aa7****}
     * Refer https://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/
   * Test using [cp 1000.xml ../../files/kafka/xml/; cp 1000.json ../../files/kafka/json/]
 
