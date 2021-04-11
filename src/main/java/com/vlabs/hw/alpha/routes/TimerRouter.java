@@ -1,12 +1,13 @@
 package com.vlabs.hw.alpha.routes;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 @Component
 public class TimerRouter extends RouteBuilder {
@@ -28,6 +29,9 @@ public class TimerRouter extends RouteBuilder {
 
                     .bean(dummyTimer, "getFormattedCurrentTime")
                     .log("> transform step - in bean: ${body}")
+
+                    .process(new DummyProcessor())
+                    .log("> processing step - in bean: ${body}")
 
                     .bean(dummyLogger)
                     .log("> processing step - in bean: ${body}")
@@ -54,7 +58,16 @@ class DummyTimer {
 @Slf4j
 @Component
 class DummyLogger {
-    public void simplyLog(String msg){
-      log.info("+ simple processor: {}", msg.toUpperCase());
+    public void simplyLog(String msg) {
+        log.info("- simple processor: {}", msg.toUpperCase());
+    }
+}
+
+@Slf4j
+class DummyProcessor implements Processor {
+
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        log.info("- camel processor: {}", exchange.getMessage().getBody());
     }
 }
