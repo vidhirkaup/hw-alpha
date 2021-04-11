@@ -13,7 +13,8 @@ public class ActiveMQRouter extends RouteBuilder {
         from("file:files/json")
                 .log("${body}")
                 .to("activemq:test-queue-1")
-                .to("activemq:test-queue-2");
+                .to("activemq:test-queue-2")
+                .to("activemq:test-queue-3");
 
     }
 }
