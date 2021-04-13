@@ -5,7 +5,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
+//@Component
 public class KafkaRouter extends RouteBuilder {
     @Override
     public void configure() throws Exception {

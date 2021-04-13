@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Component
+//@Component
 public class ActiveMQRouter extends RouteBuilder {
     @Override
     public void configure() throws Exception {
