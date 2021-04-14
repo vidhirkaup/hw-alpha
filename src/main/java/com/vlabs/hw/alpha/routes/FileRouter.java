@@ -20,23 +20,23 @@ public class FileRouter extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         from("file:files/input")
-                .log("${body}")
                 .choice()
-                    .when(method(dice, "spin"))
-                        .log("first time: > 0.5")
+                .when(method(dice, "spin"))
+                .log("first time: > 0.5")
 
-                    .when(method(dice, "spin"))
-                        .log("second time: > 0.5")
+                .when(method(dice, "spin"))
+                .log("second time: > 0.5")
 
-                    .when(simple("${file:ext} == 'xml'"))
-                        .log("XML File")
+                .when(simple("${file:ext} == 'xml'"))
+                .log("XML File")
 
-                    .when(simple("${file:ext} == 'json'"))
-                        .log("JSON File")
+                .when(simple("${file:ext} == 'json'"))
+                .log("JSON File")
 
-                    .otherwise()
-                        .log("not xml or json")
+                .otherwise()
+                .log("not xml or json")
                 .end()
+                .to("direct://log-file-values")
                 .to("file:files/output");
 
     }
@@ -46,14 +46,14 @@ public class FileRouter extends RouteBuilder {
 @Component
 class Dice {
     public boolean spin(@Headers Map<String, String> headers,
-                                   @ExchangeProperties Map<String, String> exchangeProperties,
-                                   @Body String body){
-        log.info("headers: {}", headers);
-        log.info("exchangeProperties: {}", exchangeProperties);
-        log.info("body: {}", body);
+                        @ExchangeProperties Map<String, String> exchangeProperties,
+                        @Body String body) {
+//        log.info("headers: {}", headers);
+//        log.info("exchangeProperties: {}", exchangeProperties);
+//        log.info("body: {}", body);
 
         double val = new Random().nextDouble();
-        log.info(String.valueOf(val));
-        return (val  > 0.5 ? true : false);
+//        log.info(String.valueOf(val));
+        return (val > 0.5 ? true : false);
     }
 }
