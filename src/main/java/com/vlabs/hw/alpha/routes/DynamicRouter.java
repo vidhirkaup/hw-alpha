@@ -5,6 +5,7 @@ import org.apache.camel.Body;
 import org.apache.camel.ExchangeProperties;
 import org.apache.camel.Headers;
 import org.apache.camel.builder.RouteBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -12,19 +13,28 @@ import java.util.Map;
 @Slf4j
 @Component
 public class DynamicRouter extends RouteBuilder {
+
+    @Value("${workflowOne.stepOne}")
+    private String stepOne;
+
+    @Value("${workflowOne.stepTwo}")
+    private String stepTwo;
+
+    @Value("${workflowOne.stepThree}")
+    private String stepThree;
+
     @Override
     public void configure() throws Exception {
 
-        from("direct:workflowOne-start")
-                .bean("workflowOne", "start");
-        from("direct:workflowOne-stepOne")
+        from(stepOne)
                 .bean("workflowOne", "stepOne");
-        from("direct:workflowOne-stepTwo")
+
+        from(stepTwo)
                 .bean("workflowOne", "stepTwo");
-        from("direct:workflowOne-stepThree")
+
+        from(stepThree)
                 .bean("workflowOne", "stepThree");
-        from("direct:workflowOne-end")
-                .bean("workflowOne", "end");
+
 
         from("timer:workflowOne?period=5000")
                 .transform().constant("start workflow one")
@@ -36,73 +46,38 @@ public class DynamicRouter extends RouteBuilder {
 @Component
 class WorkflowOne {
 
+    @Value("#{${workflowOne.uris}}")
+    private Map<String, String> uris;
+
     public String steps(@Headers Map<String, String> headers,
                         @ExchangeProperties Map<String, String> exchangeProperties,
                         @Body String body) {
-        String step = (headers.get("step") == null ? "start" : headers.get("step"));
-        switch (step) {
-            case "start":
-                step = "direct:workflowOne-start";
-                break;
-            case "direct:workflowOne-stepOne":
-                step = "direct:workflowOne-stepOne";
-                break;
-            case "direct:workflowOne-stepTwo":
-                step = "direct:workflowOne-stepTwo";
-                break;
-            case "direct:workflowOne-stepThree":
-                step = "direct:workflowOne-stepThree";
-                break;
-            case "direct:workflowOne-end":
-                step = "direct:workflowOne-end";
-                break;
-            case "end":
-                step = null;
-                break;
-        }
-        log.info("calling : {}", step);
-        return step;
+        String step = headers.get("step") == null ? "stepOne" : headers.get("step");
+
+        String uri = "end".equals(step) ? null : uris.get(step);
+
+        log.info("calling {} -> {}", step, uri);
+        return uri;
     }
 
-    public String start(@Headers Map<String, String> headers,
+    public void stepOne(@Headers Map<String, String> headers,
                         @ExchangeProperties Map<String, String> exchangeProperties,
                         @Body String body) {
-        log.info("---- [current step] {}", headers.get("step"));
-        headers.put("step", "direct:workflowOne-stepOne");
-        return "direct:workflowOne-stepOne";
+        log.info("---- [ In step one. ]");
+        headers.put("step", "stepTwo");
     }
 
-    public String stepOne(@Headers Map<String, String> headers,
+    public void stepTwo(@Headers Map<String, String> headers,
+                        @ExchangeProperties Map<String, String> exchangeProperties,
+                        @Body String body) {
+        log.info("---- [ In step two.. ] ");
+        headers.put("step", "stepThree");
+    }
+
+    public void stepThree(@Headers Map<String, String> headers,
                           @ExchangeProperties Map<String, String> exchangeProperties,
                           @Body String body) {
-        log.info("---- [current step] {}", headers.get("step"));
-        headers.put("step", "direct:workflowOne-stepTwo");
-        return "direct:workflowOne-stepTwo";
-    }
-
-    public String stepTwo(@Headers Map<String, String> headers,
-                          @ExchangeProperties Map<String, String> exchangeProperties,
-                          @Body String body) {
-
-        log.info("---- [current step] {}", headers.get("step"));
-        headers.put("step", "direct:workflowOne-stepThree");
-        return "direct:workflowOne-stepThree";
-    }
-
-    public String stepThree(@Headers Map<String, String> headers,
-                            @ExchangeProperties Map<String, String> exchangeProperties,
-                            @Body String body) {
-
-        log.info("---- [current step] {}", headers.get("step"));
-        headers.put("step", "direct:workflowOne-end");
-        return "direct:workflowOne-end";
-    }
-
-    public String end(@Headers Map<String, String> headers,
-                      @ExchangeProperties Map<String, String> exchangeProperties,
-                      @Body String body) {
-        log.info("---- [current step] {}", headers.get("step"));
+        log.info("---- [ In step three... ] ");
         headers.put("step", "end");
-        return null;
     }
 }
