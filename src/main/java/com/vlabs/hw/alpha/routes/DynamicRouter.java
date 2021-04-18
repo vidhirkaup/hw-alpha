@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Slf4j
-@Component
+//@Component
 public class DynamicRouter extends RouteBuilder {
 
     @Value("${workflowOne.stepOne}")
@@ -38,7 +38,10 @@ public class DynamicRouter extends RouteBuilder {
 
         from("timer:workflowOne?period=5000")
                 .transform().constant("start workflow one")
-                .dynamicRouter(method("workflowOne", "steps"));
+                .log("start: workflowOne")
+                .dynamicRouter(method("workflowOne", "steps"))
+                .log("end: workflowOne")
+                .log("----------------");
     }
 }
 
@@ -52,7 +55,7 @@ class WorkflowOne {
     public String steps(@Headers Map<String, String> headers,
                         @ExchangeProperties Map<String, String> exchangeProperties,
                         @Body String body) {
-        String step = headers.get("step") == null ? "stepOne" : headers.get("step");
+        String step = headers.getOrDefault("step", "stepOne");
 
         String uri = "end".equals(step) ? null : uris.get(step);
 

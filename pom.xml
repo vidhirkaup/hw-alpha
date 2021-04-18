@@ -68,13 +68,8 @@
 			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.camel.springboot</groupId>
-			<artifactId>camel-http-starter</artifactId>
-			<version>${camel.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel.springboot</groupId>
-			<artifactId>camel-rest-starter</artifactId>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-ahc</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
 
