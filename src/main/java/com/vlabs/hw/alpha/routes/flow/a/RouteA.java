@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Route extends RouteBuilder {
+public class RouteA extends RouteBuilder {
 
     @Value("${flowA.stepA}")
     private String stepA;
@@ -19,16 +19,16 @@ public class Route extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         from(stepA)
-                .bean("stepA", "perform");
+                .bean("flowAStepA", "perform");
         from(stepB)
-                .bean("stepB", "perform");
+                .bean("flowAStepB", "perform");
         from(stepC)
-                .bean("stepC", "perform");
+                .bean("flowAStepC", "perform");
 
 //        from("timer:flowA?period=10000")
         from("direct:flowA")
                 .log("start:: flow A")
-                .dynamicRouter(method("plan", "steps"))
+                .dynamicRouter(method("planA", "steps"))
                 .log("end:: flow A")
                 .log("------------");
     }

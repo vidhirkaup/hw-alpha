@@ -30,4 +30,15 @@ The following guides illustrate how to use some features concretely:
   * For this issue {java.net.UnknownHostException: 02a85aa7****}
     * Refer https://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/
   * Test using [cp 1000.xml ../../files/kafka/xml/; cp 1000.json ../../files/kafka/json/]
+  
+* For Rest
+  * http://localhost:8081/camel-api/alpha/start/{flow} 
+    * use flow = [flowA | flowB | flowC]
+  * Flow A
+    * http://localhost:8081/camel-api/alpha/start/flowA
+  * Flow B
+    * http://localhost:8081/camel-api/alpha/start/flowB
+  * Flow B
+    * http://localhost:8081/camel-api/alpha/start/flowC
+  
 

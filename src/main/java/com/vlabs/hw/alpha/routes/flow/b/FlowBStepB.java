@@ -1,4 +1,4 @@
-package com.vlabs.hw.alpha.routes.flow.a;
+package com.vlabs.hw.alpha.routes.flow.b;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Body;
@@ -10,11 +10,11 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class StepA {
+public class FlowBStepB {
     public void perform(@Headers Map<String, String> headers,
                         @ExchangeProperties Map<String, String> exchangeProperties,
                         @Body String body) {
-          log.info("---- [performing Step A]");
-          headers.put("step", "stepB");
+          log.info("---- [performing Step B]");
+          headers.put("step", "end");
     }
 }
