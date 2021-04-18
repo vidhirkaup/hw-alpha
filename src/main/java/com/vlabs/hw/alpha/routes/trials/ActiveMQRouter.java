@@ -1,4 +1,4 @@
-package com.vlabs.hw.alpha.routes;
+package com.vlabs.hw.alpha.routes.trials;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;

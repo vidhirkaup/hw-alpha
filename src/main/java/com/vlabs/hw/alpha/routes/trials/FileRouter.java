@@ -1,4 +1,4 @@
-package com.vlabs.hw.alpha.routes;
+package com.vlabs.hw.alpha.routes.trials;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Body;
